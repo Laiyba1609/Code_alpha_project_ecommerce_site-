@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChocoLuxe — Premium Chocolate &amp; Gift Hampers</title>
+<style>
+  :root {
+    --bg: #faf6ef;
+    --dark: #2b0f0a;
+    --amber: #f59e0b;
+    --amber-dark: #b45309;
+    --text: #1c1917;
+    --muted: #78716c;
+    --card: #ffffff;
+    --line: #e7e5e4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { text-decoration: none; color: inherit; }
+  button { cursor: pointer; font-family: inherit; }
+  img { display: block; }
+
+  /* Navbar */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(43, 15, 10, 0.95);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #3f2a24;
+    color: #fef3c7;
+  }
+  .nav-inner {
+    max-width: 1120px; margin: 0 auto; padding: 0 16px;
+    height: 64px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.02em; color: #fef3c7; display: flex; align-items: center; gap: 8px; }
+  .brand span.hi { color: var(--amber); }
+  .nav-links { display: flex; align-items: center; gap: 18px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: rgba(254, 243, 199, 0.85); }
+  .nav-links a:hover { color: #fcd34d; }
+  .nav-links a.active { color: #fcd34d; }
+  .cart-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px;
+    border-radius: 999px; background: var(--amber); color: #1c1917;
+    font-size: 12px; font-weight: 700;
+  }
+  .btn {
+    border: none; border-radius: 999px; font-weight: 600; font-size: 14px;
+    padding: 8px 18px; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--amber); color: #1c1917; }
+  .btn-primary:hover { background: #fbbf24; }
+  .btn-outline { background: transparent; border: 1px solid rgba(252, 211, 77, 0.5); color: #fef3c7; }
+  .btn-outline:hover { background: rgba(252, 211, 77, 0.15); }
+  .btn-solid { background: var(--amber-dark); color: #fff; }
+  .btn-solid:hover { background: #b45309; }
+  .btn-green { background: #16a34a; color: #fff; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-lg { padding: 12px 28px; font-size: 15px; }
+
+  /* Hero */
+  .hero {
+    background: var(--dark); color: #fef3c7; overflow: hidden; position: relative;
+  }
+  .hero-img { position: absolute; inset: 0; opacity: 0.45; object-fit: cover; width: 100%; height: 100%; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, #2b0f0a, rgba(43,15,10,0.7), transparent); }
+  .hero-content { position: relative; max-width: 1120px; margin: 0 auto; padding: 96px 16px; }
+  .hero-kicker {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber);
+  }
+  .hero h1 { max-width: 560px; font-size: 46px; line-height: 1.1; margin-top: 12px; font-weight: 800; }
+  .hero p { max-width: 460px; margin-top: 16px; color: rgba(254, 243, 199, 0.8); line-height: 1.6; }
+  .hero-actions { margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-light { background: var(--amber); color: #1c1917; }
+  .btn-light:hover { background: #fbbf24; }
+  .btn-ghost { background: transparent; border: 1px solid rgba(254, 243, 199, 0.5); color: #fef3c7; }
+  .btn-ghost:hover { background: rgba(254, 243, 199, 0.1); }
+
+  /* Sections */
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .section { padding: 40px 0; }
+  .section-head { margin-bottom: 24px; }
+  .section-head h2 { font-size: 24px; font-weight: 800; }
+  .section-head p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  /* Product grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .card:hover { box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+  .card-img-wrap { position: relative; aspect-ratio: 4/3; overflow: hidden; background: #f5f5f4; cursor: pointer; }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .card:hover .card-img-wrap img { transform: scale(1.05); }
+  .badge {
+    position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff;
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .card-body { padding: 14px; display: flex; flex-direction: column; flex: 1; }
+  .card-brand { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--amber-dark); }
+  .card-country { float: right; font-size: 11px; color: #a8a29e; }
+  .card-title { font-size: 14px; font-weight: 700; margin-top: 6px; line-height: 1.3; }
+  .card-desc { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+  .card-foot { margin-top: auto; padding-top: 12px; }
+  .price { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+  .add-btn {
+    width: 100%; border: none; border-radius: 999px; padding: 10px;
+    background: var(--amber-dark); color: #fff; font-weight: 700; font-size: 13px; transition: all 0.15s;
+  }
+  .add-btn:hover { background: #b45309; }
+  .add-btn.added { background: #16a34a; }
+
+  /* Tabs + search */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tab {
+    border: 1px solid var(--line); background: #fff; color: var(--muted);
+    border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 600; transition: all 0.15s;
+  }
+  .tab.active { background: var(--amber-dark); color: #fff; border-color: var(--amber-dark); }
+  #search {
+    border: 1px solid var(--line); background: #fff; border-radius: 999px;
+    padding: 9px 18px; font-size: 14px; width: 240px; outline: none;
+  }
+  #search:focus { border-color: var(--amber); }
+
+  /* Detail modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100;
+    display: none; align-items: center; justify-content: center; padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 20px; max-width: 820px; width: 100%;
+    max-height: 92vh; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  }
+  .modal-img { width: 100%; height: 100%; object-fit: cover; min-height: 320px; }
+  .modal-body { padding: 28px; }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px; background: #fff; border: none; border-radius: 999px;
+    width: 36px; height: 36px; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .modal-close:hover { background: #f5f5f4; }
+  .modal-brand { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--amber-dark); }
+  .modal h2 { font-size: 26px; font-weight: 800; margin-top: 8px; }
+  .modal-price { font-size: 26px; font-weight: 800; color: var(--amber-dark); margin: 14px 0; }
+  .modal-desc { color: var(--muted); line-height: 1.7; font-size: 15px; }
+  .stock {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+    font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 999px;
+  }
+  .stock.in { background: #dcfce7; color: #15803d; }
+  .stock.out { background: #fee2e2; color: #b91c1c; }
+  .stock .dot { width: 8px; height: 8px; border-radius: 999px; }
+  .stock.in .dot { background: #16a34a; }
+  .stock.out .dot { background: #dc2626; }
+  .modal-actions { margin-top: 24px; }
+  .qty-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .qty-btn {
+    width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line);
+    background: #fff; font-size: 18px; display: grid; place-items: center;
+  }
+  .qty-btn:hover { background: #f5f5f4; }
+  .qty-val { font-weight: 700; min-width: 24px; text-align: center; }
+
+  /* Cart page */
+  .page { padding: 40px 16px; }
+  .page h1 { font-size: 30px; font-weight: 800; margin-bottom: 24px; }
+  .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+  .cart-items { display: flex; flex-direction: column; gap: 14px; }
+  .cart-item {
+    display: flex; gap: 16px; background: #fff; border: 1px solid var(--line);
+    border-radius: 16px; padding: 14px;
+  }
+  .cart-item img { width: 96px; height: 96px; border-radius: 12px; object-fit: cover; }
+  .cart-item-info { flex: 1; display: flex; flex-direction: column; }
+  .cart-item-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .cart-item-title { font-weight: 700; }
+  .remove { background: none; border: none; color: #a8a29e; font-size: 16px; }
+  .remove:hover { color: #dc2626; }
+  .cart-item-bottom { margin-top: auto; display: flex; align-items: center; justify-content: space-between; }
+  .cart-item-price { font-weight: 700; }
+  .summary {
+    background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; position: sticky; top: 84px;
+  }
+  .summary h3 { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
+  .sum-row { display: flex; justify-content: space-between; font-size: 14px; margin: 8px 0; color: var(--muted); }
+  .sum-row.total { color: var(--text); font-weight: 800; font-size: 16px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+  .summary input, .summary textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+    font-size: 14px; margin-top: 10px; outline: none; font-family: inherit;
+  }
+  .summary input:focus, .summary textarea:focus { border-color: var(--amber); }
+  .checkout-btn { width: 100%; margin-top: 14px; }
+
+  /* Auth */
+  .auth-wrap { max-width: 420px; margin: 60px auto; text-align: center; }
+  .auth-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 28px; text-align: left; }
+  .auth-card label { display: block; font-size: 13px; font-weight: 700; margin: 14px 0 6px; color: var(--text); }
+  .auth-card input {
+    width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; font-size: 14px; outline: none;
+  }
+  .auth-card input:focus { border-color: var(--amber); }
+  .auth-switch { margin-top: 18px; font-size: 14px; color: var(--muted); text-align: center; }
+  .auth-switch a { color: var(--amber-dark); font-weight: 700; }
+
+  /* Orders */
+  .order-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .order-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .order-status { background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+  .order-items { list-style: none; margin-top: 12px; font-size: 14px; }
+  .order-items li { display: flex; justify-content: space-between; padding: 5px 0; }
+  .order-total { text-align: right; font-weight: 800; margin-top: 12px; }
+  .empty { text-align: center; padding: 60px 0; color: var(--muted); }
+  .empty .big { font-size: 56px; margin-bottom: 12px; }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120%);
+    background: #16a34a; color: #fff; padding: 12px 22px; border-radius: 999px;
+    font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.25); transition: transform 0.3s; z-index: 200;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  footer { background: var(--dark); color: rgba(254,243,199,0.7); text-align: center; padding: 40px 16px; margin-top: 40px; }
+  footer .big { color: #fef3c7; font-weight: 700; }
+  @media (max-width: 800px) {
+    .hero h1 { font-size: 32px; }
+    .modal { grid-template-columns: 1fr; }
+    .cart-layout { grid-template-columns: 1fr; }
+    #search { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="#/shop" class="brand">🍫 Choco<span class="hi">Luxe</span></a>
+    <nav class="nav-links">
+      <a href="#/shop" data-link="shop">Shop</a>
+      <a href="#/cart" data-link="cart">Cart<span class="cart-count" id="nav-cart-count" style="display:none">0</span></a>
+      <span id="nav-user-area"></span>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <video class="hero-img" autoplay muted loop playsinline preload="auto"
+         poster="https://images.pexels.com/photos/38444667/pexels-photo-38444667.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
+    <source src="https://videos.pexels.com/video-files/11186313/11186313-hd_1920_1080_30fps.mp4" type="video/mp4" />
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-kicker">The world's finest chocolates</p>
+    <h1>Sweeten every moment with premium chocolate &amp; gift hampers</h1>
+    <p>Discover iconic brands from Switzerland to Japan — Lindt, Ferrero Rocher, Godiva, Toblerone &amp; more — plus curated hampers for every celebration.</p>
+    <div class="hero-actions">
+      <a href="#/shop" class="btn btn-light btn-lg">Shop Now</a>
+      <a href="#/register" class="btn btn-ghost btn-lg">Create an account</a>
+    </div>
+  </div>
+</section>
+
+<!-- APP ROOT -->
+<div id="app"></div>
+
+<footer>
+  <p class="big">🍫 ChocoLuxe — the world's finest chocolates &amp; gift hampers.</p>
+  <p style="margin-top:6px;font-size:13px">Lindt · Ferrero · Godiva · Toblerone · Cadbury &amp; more</p>
+</footer>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div style="position:relative;width:100%;max-width:820px">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal" id="modal"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA ================= */
+const IMG = {
+  truffleBox: "https://images.pexels.com/photos/38444667/pexels-photo-38444667.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  colorfulRibbon: "https://images.pexels.com/photos/6487798/pexels-photo-6487798.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  pralinesBoard: "https://images.pexels.com/photos/18354706/pexels-photo-18354706.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  plateChocs: "https://images.pexels.com/photos/9279002/pexels-photo-9279002.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  glossyTruffle: "https://images.pexels.com/photos/8627518/pexels-photo-8627518.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  barsWhite: "https://images.pexels.com/photos/8794102/pexels-photo-8794102.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  barsDark: "https://images.pexels.com/photos/32402905/pexels-photo-32402905.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  barsFlat: "https://images.pexels.com/photos/4113305/pexels-photo-4113305.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  barsFlowers: "https://images.pexels.com/photos/14750356/pexels-photo-14750356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  hamperBasket: "https://images.pexels.com/photos/20699854/pexels-photo-20699854.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  hamperLux: "https://images.pexels.com/photos/20699855/pexels-photo-20699855.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  hamperBox: "https://images.pexels.com/photos/28769885/pexels-photo-28769885.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  hamperCeleb: "https://images.pexels.com/photos/6487761/pexels-photo-6487761.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+};
+
+const PRODUCTS = [
+  { id: 1, name: "Lindt Lindor Truffles 200g", brand: "Lindt", category: "chocolate", country: "Switzerland", price: 18.99, stock: 120, featured: true, image: IMG.truffleBox, desc: "The iconic Swiss truffle with a velvety smooth centre that melts the moment it touches your tongue. Mastered by Lindt's Maîtres Chocolatiers." },
+  { id: 2, name: "Ferrero Rocher Gold Collection", brand: "Ferrero Rocher", category: "chocolate", country: "Italy", price: 24.99, stock: 150, featured: true, image: IMG.colorfulRibbon, desc: "Golden roasted hazelnuts wrapped in rich milk chocolate with a crunchy wafer layer. Italy's most loved gifting chocolate." },
+  { id: 3, name: "Godiva Signature Truffles Box", brand: "Godiva", category: "chocolate", country: "Belgium", price: 39.99, stock: 80, featured: true, image: IMG.pralinesBoard, desc: "A Belgian masterpiece of handcrafted truffles and pralines, each piece a journey through silky ganache and fine cocoa." },
+  { id: 4, name: "Toblerone Swiss Milk Chocolate", brand: "Toblerone", category: "chocolate", country: "Switzerland", price: 10.99, stock: 200, featured: false, image: IMG.barsWhite, desc: "The world-famous triangular Swiss bar with honey and almond nougat. A true icon of the Alps since 1908." },
+  { id: 5, name: "Ghirardelli Intense Dark Squares", brand: "Ghirardelli", category: "chocolate", country: "USA", price: 14.99, stock: 180, featured: false, image: IMG.barsDark, desc: "San Francisco's celebrated premium dark chocolate squares, rich and velvety with notes of ripe berries and cocoa." },
+  { id: 6, name: "Cadbury Dairy Milk Bar", brand: "Cadbury", category: "chocolate", country: "United Kingdom", price: 7.99, stock: 250, featured: false, image: IMG.barsFlat, desc: "The classic British glass-and-a-half bar of creamy, delicious milk chocolate loved around the world." },
+  { id: 7, name: "Milka Alpine Milk Chocolate", brand: "Milka", category: "chocolate", country: "Germany", price: 8.99, stock: 220, featured: false, image: IMG.barsFlowers, desc: "Tender Alpine milk chocolate made with Alpine milk, famously creamy and wrapped in lilac since 1901." },
+  { id: 8, name: "Valrhona Grand Cru Dark Bar", brand: "Valrhona", category: "chocolate", country: "France", price: 21.99, stock: 90, featured: false, image: IMG.barsDark, desc: "A French grand cru dark chocolate bar crafted from single-origin cacao, prized by the world's finest pastry chefs." },
+  { id: 9, name: "Guylian Belgian Seashells", brand: "Guylian", category: "chocolate", country: "Belgium", price: 16.99, stock: 130, featured: false, image: IMG.plateChocs, desc: "Handmade Belgian seashell-shaped chocolates with a delicate hazelnut praliné filling, famous since 1960." },
+  { id: 10, name: "Royce' Nama Chocolate", brand: "Royce'", category: "chocolate", country: "Japan", price: 32.99, stock: 70, featured: false, image: IMG.glossyTruffle, desc: "Japan's ultra-smooth nama chocolate from Hokkaido, melt-in-the-mouth pieces dusted with pure cocoa." },
+  { id: 11, name: "Hershey's Kisses Milk Chocolates", brand: "Hershey's", category: "chocolate", country: "USA", price: 6.99, stock: 300, featured: false, image: IMG.barsFlat, desc: "The timeless American classic — bite-sized milk chocolate kisses that everyone recognises on sight." },
+  { id: 12, name: "Nestlé KitKat Chunky", brand: "Nestlé", category: "chocolate", country: "United Kingdom", price: 8.99, stock: 260, featured: false, image: IMG.barsWhite, desc: "Crisp wafer fingers enrobed in rich milk chocolate. Take a break with the world's favourite chocolate biscuit." },
+  { id: 13, name: "Moser Roth Finest Dark", brand: "Moser Roth", category: "chocolate", country: "Germany", price: 12.99, stock: 110, featured: false, image: IMG.barsDark, desc: "German craft chocolate in a sleek double-pack, intense single-origin bars for the discerning connoisseur." },
+  { id: 14, name: "See's Candies Milk Truffle", brand: "See's Candies", category: "chocolate", country: "USA", price: 19.99, stock: 95, featured: false, image: IMG.truffleBox, desc: "A beloved American West Coast confectionery house, famous for its silky milk chocolate truffles." },
+  { id: 15, name: "Grand Chocolate Gift Basket", brand: "ChocoLuxe", category: "hamper", country: "Premium Blend", price: 59.99, stock: 40, featured: true, image: IMG.hamperBasket, desc: "A generously packed wicker basket bursting with pralines, truffles and artisan sweets — the ultimate chocolate lover's hamper." },
+  { id: 16, name: "Celebration Luxury Hamper", brand: "ChocoLuxe", category: "hamper", country: "Premium Blend", price: 74.99, stock: 35, featured: true, image: IMG.hamperCeleb, desc: "Champagne, chocolates and gourmet treats presented in an elegant box. Perfect for birthdays, anniversaries and weddings." },
+  { id: 17, name: "Belgian Praline Deluxe Box", brand: "ChocoLuxe", category: "hamper", country: "Belgium", price: 45.99, stock: 50, featured: false, image: IMG.hamperLux, desc: "A curated selection of fine Belgian pralines, truffles and hand-dipped chocolates in a keepsake presentation box." },
+  { id: 18, name: "Sweet Celebrations Hamper", brand: "ChocoLuxe", category: "hamper", country: "Premium Blend", price: 39.99, stock: 60, featured: false, image: IMG.hamperBox, desc: "An assortment of cookies, chocolates and festive sweets beautifully arranged for any celebration or thank-you gift." }
+];
+
+/* ================= STATE & STORAGE ================= */
+const $ = (id) => document.getElementById(id);
+
+function load(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch { return fallback; }
+}
+function save(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+
+let cart = load("choc_cart", []);
+let session = load("choc_session", null);   // { name, email }
+let orders = load("choc_orders", []);
+let users = load("choc_users", []);          // { name, email, password }
+
+function money(n) { return n.toLocaleString("en-US", { style: "currency", currency: "USD" }); }
+function cartCount() { return cart.reduce((s, i) => s + i.qty, 0); }
+function cartSubtotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+/* ================= NAV ================= */
+function renderNav() {
+  const count = cartCount();
+  const el = $("nav-cart-count");
+  el.textContent = count;
+  el.style.display = count > 0 ? "inline-flex" : "none";
+
+  const area = $("nav-user-area");
+  if (session) {
+    area.innerHTML = `
+      <a href="#/orders">Orders</a>
+      <button class="btn btn-outline" onclick="logout()">Logout</button>`;
+  } else {
+    area.innerHTML = `
+      <a href="#/login">Login</a>
+      <a href="#/register" class="btn btn-primary">Sign up</a>`;
+  }
+}
+
+function logout() {
+  session = null;
+  save("choc_session", null);
+  renderNav();
+  location.hash = "#/shop";
+}
+
+/* ================= ROUTER ================= */
+function router() {
+  const route = (location.hash || "#/shop").replace("#/", "");
+  const [path, param] = route.split("/");
+  if (path === "cart") renderCart();
+  else if (path === "login") renderLogin();
+  else if (path === "register") renderRegister();
+  else if (path === "orders") renderOrders();
+  else renderShop();
+}
+
+/* ================= SHOP ================= */
+let currentTab = "all";
+let searchQuery = "";
+
+function renderShop() {
+  const filtered = PRODUCTS.filter(p => {
+    const inTab = currentTab === "all" || p.category === currentTab;
+    const q = searchQuery.toLowerCase();
+    const inSearch = !q || p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+    return inTab && inSearch;
+  });
+
+  $("app").innerHTML = `
+    <section class="section container">
+      <div class="toolbar">
+        <div class="tabs">
+          ${[["all","All Chocolates"],["chocolate","Famous Brands"],["hamper","Gift Hampers"]]
+            .map(([k,l]) => `<button class="tab ${currentTab===k?'active':''}" onclick="setTab('${k}')">${l}</button>`).join("")}
+        </div>
+        <input id="search" placeholder="Search chocolate…" value="${searchQuery}" oninput="setSearch(this.value)" />
+      </div>
+      ${filtered.length === 0
+        ? `<div class="empty"><div class="big">🍫</div>No chocolates found. Try a different search.</div>`
+        : `<div class="grid">${filtered.map(cardHTML).join("")}</div>`}
+    </section>`;
+}
+
+function cardHTML(p) {
+  const soldOut = p.stock <= 0;
+  return `
+    <div class="card">
+      <div class="card-img-wrap" onclick="openDetail(${p.id})">
+        <img src="${p.image}" alt="${p.name}" loading="lazy" />
+        ${p.featured ? `<span class="badge">★ Bestseller</span>` : ""}
+      </div>
+      <div class="card-body">
+        <div>
+          <span class="card-brand">${p.brand}</span>
+          <span class="card-country">${p.country}</span>
+        </div>
+        <div class="card-title">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-foot">
+          <div class="price">${money(p.price)}</div>
+          <button class="add-btn ${soldOut?'added':''}" ${soldOut?'disabled':''} onclick="quickAdd(${p.id})">${soldOut ? "Sold out" : "Add to Cart"}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function setTab(t) { currentTab = t; renderShop(); }
+function setSearch(v) { searchQuery = v; renderShop(); }
+
+function quickAdd(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p || p.stock <= 0) return;
+  addToCart(p);
+}
+
+function addToCart(p, qty = 1) {
+  const existing = cart.find(i => i.id === p.id);
+  if (existing) existing.qty += qty;
+  else cart.push({ id: p.id, name: p.name, brand: p.brand, price: p.price, image: p.image, qty });
+  save("choc_cart", cart);
+  renderNav();
+  toast(`${p.name} added to cart 🍫`);
+}
+
+/* ================= DETAIL MODAL ================= */
+let detailId = null;
+function openDetail(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  detailId = id;
+  const soldOut = p.stock <= 0;
+  $("modal").innerHTML = `
+    <img class="modal-img" src="${p.image}" alt="${p.name}" />
+    <div class="modal-body">
+      <div class="modal-brand">${p.brand} · ${p.country}</div>
+      <h2>${p.name}</h2>
+      <div class="modal-price">${money(p.price)}</div>
+      <p class="modal-desc">${p.desc}</p>
+      <div class="stock ${soldOut?'out':'in'}"><span class="dot"></span>${soldOut ? "Sold out" : p.stock + " in stock"}</div>
+      <div class="modal-actions">
+        <button class="btn btn-solid btn-lg" style="width:100%" ${soldOut?'disabled':''} onclick="addFromDetail()">${soldOut ? "Sold out" : "Add to Cart"}</button>
+        <div class="qty-row">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-val" id="qty-val">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      <p style="margin-top:16px;font-size:12px;color:#a8a29e">Free delivery over $50 · Gift wrapping available · Worldwide shipping</p>
+    </div>`;
+  $("modal-overlay").classList.add("open");
+}
+
+function changeQty(d) {
+  const el = $("qty-val");
+  let v = parseInt(el.textContent, 10) + d;
+  if (v < 1) v = 1;
+  el.textContent = v;
+}
+function addFromDetail() {
+  const p = PRODUCTS.find(x => x.id === detailId);
+  const qty = parseInt($("qty-val").textContent, 10);
+  addToCart(p, qty);
+  closeModal();
+}
+function closeModal() { $("modal-overlay").classList.remove("open"); }
+
+$("modal-overlay").addEventListener("click", (e) => { if (e.target === $("modal-overlay")) closeModal(); });
+$("modal-close").addEventListener("click", closeModal);
+
+/* ================= CART ================= */
+function renderCart() {
+  const subtotal = cartSubtotal();
+  const shipping = cart.length > 0 ? (subtotal >= 50 ? 0 : 4.99) : 0;
+  const total = subtotal + shipping;
+
+  if (cart.length === 0) {
+    $("app").innerHTML = `
+      <section class="page container">
+        <h1>Shopping Cart</h1>
+        <div class="empty"><div class="big">🛒</div>Your cart is empty.<br/><br/>
+        <a href="#/shop" class="btn btn-solid btn-lg">Browse chocolates</a></div>
+      </section>`;
+    return;
+  }
+
+  $("app").innerHTML = `
+    <section class="page container">
+      <h1>Shopping Cart</h1>
+      <div class="cart-layout">
+        <div class="cart-items">
+          ${cart.map(itemHTML).join("")}
+          <a href="#/shop" style="color:var(--amber-dark);font-weight:700;font-size:14px">← Continue shopping</a>
+        </div>
+        <div class="summary">
+          <h3>Checkout</h3>
+          <div class="sum-row"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+          <div class="sum-row"><span>Shipping</span><span>${shipping === 0 ? "Free" : money(shipping)}</span></div>
+          <div class="sum-row total"><span>Total</span><span>${money(total)}</span></div>
+          <input id="c-name" placeholder="Full name" />
+          <input id="c-email" type="email" placeholder="Email address" />
+          <textarea id="c-address" rows="3" placeholder="Shipping address"></textarea>
+          <p id="cart-error" style="color:#dc2626;font-size:13px;display:none;margin-top:10px"></p>
+          <button class="btn btn-solid checkout-btn" onclick="placeOrder()">Place Order 🍫</button>
+        </div>
+      </div>
+    </section>`;
+}
+
+function itemHTML(i) {
+  return `
+    <div class="cart-item">
+      <img src="${i.image}" alt="${i.name}" />
+      <div class="cart-item-info">
+        <div class="cart-item-top">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber-dark)">${i.brand}</div>
+            <div class="cart-item-title">${i.name}</div>
+          </div>
+          <button class="remove" onclick="removeItem(${i.id})">✕</button>
+        </div>
+        <div class="cart-item-bottom">
+          <div class="qty-row" style="margin:0">
+            <button class="qty-btn" onclick="setQty(${i.id}, ${i.qty - 1})">−</button>
+            <span class="qty-val">${i.qty}</span>
+            <button class="qty-btn" onclick="setQty(${i.id}, ${i.qty + 1})">+</button>
+          </div>
+          <div class="cart-item-price">${money(i.price * i.qty)}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function setQty(id, q) {
+  if (q <= 0) { cart = cart.filter(i => i.id !== id); }
+  else { const it = cart.find(i => i.id === id); if (it) it.qty = q; }
+  save("choc_cart", cart); renderNav(); renderCart();
+}
+function removeItem(id) { setQty(id, 0); }
+
+function placeOrder() {
+  const name = $("c-name").value.trim();
+  const email = $("c-email").value.trim();
+  const address = $("c-address").value.trim();
+  const err = $("cart-error");
+  if (!name || !email || !address) { err.textContent = "Please fill in all shipping details."; err.style.display = "block"; return; }
+  if (!/^\S+@\S+\.\S+$/.test(email)) { err.textContent = "Please enter a valid email."; err.style.display = "block"; return; }
+
+  // Validate stock
+  for (const item of cart) {
+    const p = PRODUCTS.find(x => x.id === item.id);
+    if (!p || p.stock < item.qty) {
+      err.textContent = `Only ${p ? p.stock : 0} left of ${item.name}.`; err.style.display = "block"; return;
+    }
+  }
+
+  const total = cartSubtotal() + (cartSubtotal() >= 50 ? 0 : 4.99);
+  const order = {
+    id: Date.now().toString().slice(-6),
+    name, email, address,
+    total,
+    status: "Confirmed",
+    date: new Date().toLocaleString(),
+    items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty }))
+  };
+
+  orders.unshift(order);
+  save("choc_orders", orders);
+
+  // decrement stock
+  cart.forEach(i => { const p = PRODUCTS.find(x => x.id === i.id); if (p) p.stock -= i.qty; });
+
+  cart = [];
+  save("choc_cart", cart);
+  renderNav();
+  renderConfirmation(order);
+}
+
+function renderConfirmation(order) {
+  $("app").innerHTML = `
+    <section class="page container" style="text-align:center;max-width:520px">
+      <div class="big" style="font-size:64px;margin-bottom:12px">🎉</div>
+      <h1 style="margin-bottom:8px">Order confirmed!</h1>
+      <p style="color:var(--muted)">Thank you for your order. Your chocolate is on its way.</p>
+      <p style="margin-top:8px">Order <b>#${order.id}</b> · <b>${money(order.total)}</b></p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+        <a href="#/shop" class="btn btn-solid btn-lg">Continue shopping</a>
+        <a href="#/orders" class="btn btn-ghost btn-lg" style="border-color:var(--line);color:var(--text)">View orders</a>
+      </div>
+    </section>`;
+}
+
+/* ================= AUTH ================= */
+function renderLogin() {
+  $("app").innerHTML = `
+    <div class="auth-wrap">
+      <div style="font-size:48px">🍫</div>
+      <h1 style="margin:10px 0 4px;font-size:28px">Welcome back</h1>
+      <p style="color:var(--muted);margin-bottom:20px">Login to view your orders &amp; checkout faster</p>
+      <form class="auth-card" onsubmit="doLogin(event)">
+        <label>Email</label>
+        <input id="l-email" type="email" placeholder="you@example.com" required />
+        <label>Password</label>
+        <input id="l-pass" type="password" placeholder="••••••••" required />
+        <p id="auth-error" style="color:#dc2626;font-size:13px;display:none;margin-top:10px"></p>
+        <button class="btn btn-solid btn-lg" style="width:100%;margin-top:16px">Login</button>
+      </form>
+      <p class="auth-switch">Don't have an account? <a href="#/register">Create one</a></p>
+    </div>`;
+}
+
+function renderRegister() {
+  $("app").innerHTML = `
+    <div class="auth-wrap">
+      <div style="font-size:48px">🍫</div>
+      <h1 style="margin:10px 0 4px;font-size:28px">Join ChocoLuxe</h1>
+      <p style="color:var(--muted);margin-bottom:20px">Create an account to shop the world's finest chocolate</p>
+      <form class="auth-card" onsubmit="doRegister(event)">
+        <label>Full name</label>
+        <input id="r-name" placeholder="Jane Doe" required />
+        <label>Email</label>
+        <input id="r-email" type="email" placeholder="you@example.com" required />
+        <label>Password</label>
+        <input id="r-pass" type="password" placeholder="At least 6 characters" minlength="6" required />
+        <p id="auth-error" style="color:#dc2626;font-size:13px;display:none;margin-top:10px"></p>
+        <button class="btn btn-solid btn-lg" style="width:100%;margin-top:16px">Create account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="#/login">Login</a></p>
+    </div>`;
+}
+
+function showAuthError(msg) {
+  const el = $("auth-error");
+  el.textContent = msg; el.style.display = "block";
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const email = $("l-email").value.trim().toLowerCase();
+  const pass = $("l-pass").value;
+  const user = users.find(u => u.email === email && u.password === pass);
+  if (!user) { showAuthError("Invalid email or password."); return; }
+  session = { name: user.name, email: user.email };
+  save("choc_session", session);
+  renderNav();
+  toast(`Welcome back, ${user.name}! 🍫`);
+  location.hash = "#/shop";
+}
+
+function doRegister(e) {
+  e.preventDefault();
+  const name = $("r-name").value.trim();
+  const email = $("r-email").value.trim().toLowerCase();
+  const pass = $("r-pass").value;
+  if (!name || !email) { showAuthError("Please fill in all fields."); return; }
+  if (!/^\S+@\S+\.\S+$/.test(email)) { showAuthError("Please enter a valid email address."); return; }
+  if (pass.length < 6) { showAuthError("Password must be at least 6 characters."); return; }
+  if (users.find(u => u.email === email)) { showAuthError("An account with this email already exists."); return; }
+
+  users.push({ name, email, password: pass });
+  save("choc_users", users);
+  session = { name, email };
+  save("choc_session", session);
+  renderNav();
+  toast(`Welcome, ${name}! 🍫`);
+  location.hash = "#/shop";
+}
+
+/* ================= ORDERS ================= */
+function renderOrders() {
+  if (!session) {
+    $("app").innerHTML = `
+      <section class="page container" style="max-width:520px;text-align:center">
+        <div class="big">📦</div>
+        <h1>Your Orders</h1>
+        <p style="color:var(--muted);margin:8px 0 20px">Please login to view your order history.</p>
+        <div style="display:flex;gap:12px;justify-content:center">
+          <a href="#/login" class="btn btn-solid btn-lg">Login</a>
+          <a href="#/register" class="btn btn-ghost btn-lg" style="border-color:var(--line);color:var(--text)">Register</a>
+        </div>
+      </section>`;
+    return;
+  }
+
+  if (orders.length === 0) {
+    $("app").innerHTML = `
+      <section class="page container" style="max-width:520px;text-align:center">
+        <div class="big">🍫</div>
+        <h1>No orders yet</h1>
+        <p style="color:var(--muted);margin:8px 0 20px">When you place an order, it will show up here.</p>
+        <a href="#/shop" class="btn btn-solid btn-lg">Start shopping</a>
+      </section>`;
+    return;
+  }
+
+  $("app").innerHTML = `
+    <section class="page container" style="max-width:720px">
+      <h1>Your Orders</h1>
+      ${orders.map(o => `
+        <div class="order-card">
+          <div class="order-head">
+            <div>
+              <div style="font-weight:800">Order #${o.id}</div>
+              <div style="font-size:12px;color:var(--muted)">${o.date}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="order-status">${o.status}</span>
+              <span style="font-weight:800;color:var(--amber-dark)">${money(o.total)}</span>
+            </div>
+          </div>
+          <ul class="order-items">
+            ${o.items.map(i => `<li><span>${i.qty} × ${i.name}</span><span>${money(i.price * i.qty)}</span></li>`).join("")}
+          </ul>
+          <div style="font-size:12px;color:#a8a29e;margin-top:10px">Deliver to: ${o.address}</div>
+        </div>`).join("")}
+    </section>`;
+}
+
+/* ================= INIT ================= */
+window.addEventListener("hashchange", router);
+renderNav();
+router();
+</script>
+</body>
+</html>
